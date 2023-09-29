@@ -1,22 +1,7 @@
-#!/usr/bin/python3
-import math
-from sys import argv
+#!/bin/bash
+FILE="$1"
 
-
-def factor(number, test_num):
-    
-    print("{}={}*{}".format(number, (number // test_num), test_num))
-
-
-with open(argv[1], mode="r", encoding="UTF-8") as f:
-    for line in f:
-        number = int(line)
-        if number % 2 == 0:
-            factor(number, 2)
-        else:
-            max_number_to_test = math.floor(math.sqrt(number))
-            for test_num in range(3, max_number_to_test + 1, 2):
-                if number % test_num == 0:
-                    factor(number, test_num)
-                    break
-                            
+while read -r NUMBERS; do
+    factors=($(factor "$NUMBERS"))
+    echo "$NUMBERS=$((NUMBERS/${factors[1]}))*${factors[1]}"
+done < "$FILE"
