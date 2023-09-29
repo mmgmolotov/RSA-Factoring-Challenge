@@ -1,59 +1,60 @@
 #include "factors.h"
+
 /**
- * factorize - The function factorize a number
- * @buff: pointer to the address of the number
- *
- * Author: Thaoban Abdrasheed
- * Return: int
+ * factorize - func factorize a number and print its prime factors
+ * @num: the number to factorize
  */
-int factorize(char *buff)
+void factorize(long long int num)
 {
+    long long int i;
 
-	int num;
-	int i;
+    printf("%lld=", num);
 
-	num = atoi(buff);
-
-
-	for (i = 2; i < num; i++)
-	{
-		if (num % i == 0)
-		{
-			printf("%d=%d*%d\n", num, num/i, i);
-			break;
-		}
-	}
-
-return (0);
+    for (i = 2; i <= num;)
+    {
+        if (num % i == 0)
+        {
+            printf("%lld", i);
+            num /= i;
+            if (num > 1)
+                printf("*");
+        }
+        else
+        {
+            i++;
+        }
+    }
+    printf("\n");
 }
-/**
- * main - main function
- *
- *
- * Return: void
- */
+
 int main(int argc, char *argv[])
 {
-	FILE *fptr;
-	size_t count;
-	ssize_t line;
-	char *buff = NULL;
+    FILE *fptr;
+    size_t count;
+    ssize_t line;
+    char *buff = NULL;
 
+    if (argc != 2)
+    {
+        fprintf(stderr, "Usage: factor <filename>\n");
+        exit(EXIT_FAILURE);
+    }
+    fptr = fopen(argv[1], "r");
+    if (fptr == NULL)
+    {
+        fprintf(stderr, "Error: can't open file %s\n", argv[1]);
+        exit(EXIT_FAILURE);
+    }
+    while ((line = getline(&buff, &count, fptr)) != -1)
+    {
+        long long int num = atoll(buff);
+        factorize(num);
+    }
 
-	if (argc != 2)
-	{
-		fprintf(stderr, "Usage: factor <filename>\n");
-		exit(EXIT_FAILURE);
-	}
-	fptr = fopen(argv[1], "r");
-	if (fptr == NULL)
-	{
-		fprintf(stderr, "Error: can't open file %s\n", argv[1]);
-		exit(EXIT_FAILURE);
-	}
-	while ((line = getline(&buff, &count, fptr)) != -1)
-	{
-		factorize(buff);
-	}
-return (0);
+    if (buff)
+        free(buff);
+
+    fclose(fptr);
+
+    return 0;
 }
